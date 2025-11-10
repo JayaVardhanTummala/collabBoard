@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./src/config/dbConnect');
 const { errorHandler } = require('./src/middleware/errorMiddleware');
-const authRoutes = require('./src/routes/authRoutes');
+const authRoutes = require('./src/routes/authRoutess');
 const boardRoutes = require('./src/routes/boardRoutes');
 const taskRoutes = require('./src/routes/taskRoutes');
 
@@ -35,7 +35,7 @@ app.use(errorHandler);
 // --- Socket.io Setup ---
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:5173", // CHANGE THIS TO YOUR FRONTEND URL (e.g., Vercel URL)
+        origin: "http://localhost:3000", // CHANGE THIS TO YOUR FRONTEND URL (e.g., Vercel URL)
         methods: ["GET", "POST"]
     }
 });

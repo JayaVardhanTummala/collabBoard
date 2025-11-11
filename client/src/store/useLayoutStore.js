@@ -1,4 +1,8 @@
+import { create } from 'zustand';
+
 const useLayoutStore = create((set) => ({
-    isSidebarOpen: window.innerWidth >= 768, 
-    toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  isSidebarOpen: window.innerWidth >= 768,
+  toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 }));
+
+export default useLayoutStore;

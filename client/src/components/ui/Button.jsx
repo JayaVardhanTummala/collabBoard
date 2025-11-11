@@ -1,7 +1,9 @@
-const Button = ({ children, onClick, variant = 'primary', disabled, className = '', type='button' }) => {
+import React from 'react';
+
+const Button = ({ children, onClick, variant = 'primary', disabled, className = '', type = 'button' }) => {
   const baseClasses = "px-4 py-2 font-semibold rounded-lg transition-all duration-200 shadow-md flex items-center justify-center space-x-2";
   let variantClasses = '';
-  
+
   if (variant === 'primary') {
     variantClasses = 'bg-indigo-600 text-white hover:bg-indigo-700 disabled:bg-indigo-400';
   } else if (variant === 'secondary') {
@@ -21,3 +23,5 @@ const Button = ({ children, onClick, variant = 'primary', disabled, className = 
     </button>
   );
 };
+
+export default Button;

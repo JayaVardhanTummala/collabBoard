@@ -1,44 +1,98 @@
+/* ============================================================
+   FONT IMPORTS
+============================================================ */
+@import "@fontsource/outfit/300.css";
+@import "@fontsource/outfit/400.css";
+@import "@fontsource/outfit/500.css";
+@import "@fontsource/outfit/600.css";
+@import "@fontsource/outfit/700.css";
+
 @import "tailwindcss";
 
-/* Reset base HTML layout */
-html, body, #root {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+/* ============================================================
+   THEME VARIABLES — PREMIUM + CLEAN
+============================================================ */
+@theme {
+  --font-sans: 'Outfit', sans-serif;
+
+  --color-primary: #2563eb;        /* Blue-600 */
+  --color-primary-light: #3b82f6;  /* Blue-500 */
+  --color-primary-dark: #1e40af;   /* Blue-800 */
+
+  --color-accent-yellow: #facc15;  /* Soft yellow */
+  --color-shadow: #1e293b;         /* Navy shadow */
+  
+  --color-bg-1: #f6f8ff;
+  --color-bg-2: #eef1ff;
+  --color-bg-3: #eef2ff;
 }
 
-/* Default font and smooth rendering */
-:root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+/* ============================================================
+   GLOBAL RESET
+============================================================ */
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+
+  font-family: var(--font-sans);
+
+  background: linear-gradient(to bottom,
+      var(--color-bg-1) 0%,
+      var(--color-bg-2) 40%,
+      var(--color-bg-3) 100%);
+
+  color: #111;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Optional link styling */
+/* LIGHT MODE ROOT VARIABLES */
+:root {
+  --cb-primary: #2563eb;         /* main brand blue */
+  --cb-primary-dark: #1e3a8a;
+  --cb-yellow: #facc15;
+  --cb-blue: #60a5fa;
+  --cb-bg: #f3f4f6;
+  --cb-text: #111827;
+  --cb-card: #ffffff;
+  --cb-border: #1e293b;
+}
+
+/* DARK MODE OVERRIDES */
+.dark {
+  --cb-primary: #7dd3fc;
+  --cb-primary-dark: #38bdf8;
+  --cb-yellow: #fbbf24;
+  --cb-blue: #93c5fd;
+  --cb-bg: #0f172a;
+  --cb-text: #f8fafc;
+  --cb-card: #1e293b;
+  --cb-border: #334155;
+}
+
+/* Remove default link BS */
 a {
   color: inherit;
   text-decoration: none;
 }
 
-/* Reset button */
+/* Buttons inherit font and color */
 button {
   font-family: inherit;
-  cursor: pointer;
 }
 
-/* Remove the Vite boilerplate crap */
 body {
-  background-color: #fff; /* Default light mode background */
-  color: #000;
+  background: linear-gradient(180deg, #f6f8ff 0%, #eef1ff 100%);
+  font-family: "Outfit", sans-serif;
 }
 
-/* Dark mode base (Tailwind's dark: classes will override this) */
+/* Dark mode toggle (unused for now but ready) */
 .dark body {
-  background-color: #0a0a0a;
-  color: #fff;
+  background: #0c0c0c;
+  color: #f5f5f5;
 }

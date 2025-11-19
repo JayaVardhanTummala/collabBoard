@@ -1,32 +1,42 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
-import { Users } from 'lucide-react';
-import io from 'socket.io-client';
-import Button from '../components/ui/Button';
-import KanbanColumn from '../components/board/KanbanColumn';
-import TaskModal from '../components/board/TaskModal';
-import Modal from '../components/ui/Modal';
-import useBoardStore from '../store/useBoardStore';
-import useAuthStore from '../store/useAuthStore';
-import apiService from '../utils/apiService';
-import AnimatedPage from '../components/layout/AnimatedPage';
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { Users } from "lucide-react";
+import io from "socket.io-client";
+
+import Button from "../components/ui/Button";
+import KanbanColumn from "../components/board/KanbanColumn";
+import TaskModal from "../components/board/TaskModal";
+import Modal from "../components/ui/Modal";
+
+import useBoardStore from "../store/useBoardStore";
+import useAuthStore from "../store/useAuthStore";
+import apiService from "../utils/apiService";
+import AnimatedPage from "../components/layout/AnimatedPage";
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
-const BoardDetail = () => {
+export default function BoardDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { currentBoard, setCurrentBoard, updateTaskStatusOptimistic } = useBoardStore();
+
+  const { currentBoard, setCurrentBoard, updateTaskStatusOptimistic } =
+    useBoardStore();
   const { user } = useAuthStore();
 
   const [loading, setLoading] = useState(true);
   const [socket, setSocket] = useState(null);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
-  const [newTaskStatus, setNewTaskStatus] = useState('To-Do');
+  const [newTaskStatus, setNewTaskStatus] = useState("To-Do");
+
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteEmail, setInviteEmail] = useState("");
+
+  const [confirmTaskDelete, setConfirmTaskDelete] = useState({
+    open: false,
+    task: null
+  });
 
   const fetchBoard = useCallback(async () => {
     setLoading(true);
@@ -45,14 +55,14 @@ const BoardDetail = () => {
   }, [id, fetchBoard]);
 
   useEffect(() => {
-    const newSocket = io(SOCKET_URL);
-    newSocket.emit('joinBoard', id);
+    const s = io(SOCKET_URL);
+    s.emit("joinBoard", id);
 
-    newSocket.on('taskUpdated', fetchBoard);
-    newSocket.on('boardRefetch', fetchBoard);
+    s.on("taskUpdated", fetchBoard);
+    s.on("boardRefetch", fetchBoard);
 
-    setSocket(newSocket);
-    return () => newSocket.disconnect();
+    setSocket(s);
+    return () => s.disconnect();
   }, [id, fetchBoard]);
 
   const handleTaskDrop = async (taskId, newStatus) => {
@@ -62,7 +72,7 @@ const BoardDetail = () => {
     try {
       updateTaskStatusOptimistic(taskId, newStatus);
       await apiService.updateTask(taskId, { status: newStatus });
-      socket?.emit('taskUpdate', id, { taskId, newStatus });
+      socket?.emit("taskUpdate", id, { taskId, newStatus });
       toast.success(`Task moved to ${newStatus}`);
     } catch (err) {
       toast.error(err.message);
@@ -76,17 +86,16 @@ const BoardDetail = () => {
     setIsTaskModalOpen(true);
   };
 
-  const handleTaskClick = (task) => {
-    setTaskToEdit(task);
+  const handleTaskClick = (t) => {
+    setTaskToEdit(t);
     setIsTaskModalOpen(true);
   };
 
   const handleTaskDelete = async (task) => {
-    if (!window.confirm(`Delete task "${task.title}"?`)) return;
     try {
       await apiService.deleteTask(task._id);
-      socket?.emit('boardUpdate', id, 'task deleted');
-      toast.success(`Task "${task.title}" deleted.`);
+      socket?.emit("boardUpdate", id, "task deleted");
+      toast.success("Task deleted!");
       fetchBoard();
     } catch (err) {
       toast.error(err.message);
@@ -97,8 +106,8 @@ const BoardDetail = () => {
     e.preventDefault();
     try {
       await apiService.inviteCollaborator(id, inviteEmail);
-      toast.success('Collaborator invited!');
-      setInviteEmail('');
+      toast.success("Collaborator invited!");
+      setInviteEmail("");
       setIsInviteModalOpen(false);
       fetchBoard();
     } catch (err) {
@@ -107,10 +116,12 @@ const BoardDetail = () => {
   };
 
   if (loading || !currentBoard) {
-    return <div className="p-10 text-center text-xl dark:text-white">Loading board details...</div>;
+    return (
+      <div className="p-10 text-center text-xl">Loading board details...</div>
+    );
   }
 
-  const boardTasks = currentBoard.tasks.reduce((acc, t) => {
+  const grouped = currentBoard.tasks.reduce((acc, t) => {
     acc[t.status] = acc[t.status] || [];
     acc[t.status].push(t);
     return acc;
@@ -120,32 +131,51 @@ const BoardDetail = () => {
 
   return (
     <AnimatedPage>
-      <div className="p-6 md:p-10 flex-grow overflow-x-auto">
-        <header className="mb-8 border-b pb-4 border-gray-200 dark:border-gray-700">
-          <h1 className="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 mb-1">
+      <div
+        className="
+        w-full max-w-7xl mx-auto 
+        p-6 md:p-10 
+        flex-grow
+      "
+      >
+        <header className="mb-10 text-center">
+          <h1 className="text-4xl font-black text-[var(--color-primary)] mb-2">
             {currentBoard.title}
           </h1>
+
           <p className="text-sm opacity-70 mb-4">
-            Owner: {currentBoard.owner.name} | Collaborators: {currentBoard.collaborators.map((c) => c.name).join(', ') || 'None'}
+            Owner: {currentBoard.owner.name} | Collaborators:
+            {" "}
+            {currentBoard.collaborators.map((c) => c.name).join(", ") || "None"}
           </p>
-          <div className="flex space-x-3">
+
+          <div className="flex justify-center gap-3">
             {isOwner && (
-              <Button onClick={() => setIsInviteModalOpen(true)} variant="secondary" className="text-sm">
+              <Button
+                variant="secondary"
+                className="text-sm flex items-center gap-2"
+                onClick={() => setIsInviteModalOpen(true)}
+              >
                 <Users size={16} /> Invite
               </Button>
             )}
-            <Button onClick={() => navigate('/dashboard')} variant="secondary" className="text-sm">
+
+            <Button
+              variant="secondary"
+              className="text-sm"
+              onClick={() => navigate("/dashboard")}
+            >
               Back to Dashboard
             </Button>
           </div>
         </header>
 
-        <div className="flex space-x-6 pb-4 min-w-full items-start">
-          {['To-Do', 'Doing', 'Done'].map((status) => (
+        <div className="flex justify-center gap-6 pb-10 overflow-x-auto">
+          {["To-Do", "Doing", "Done"].map((status) => (
             <KanbanColumn
               key={status}
               status={status}
-              tasks={boardTasks[status] || []}
+              tasks={grouped[status] || []}
               onTaskDrop={handleTaskDrop}
               onNewTaskClick={handleNewTaskClick}
               onTaskClick={handleTaskClick}
@@ -162,22 +192,30 @@ const BoardDetail = () => {
           fetchBoard={fetchBoard}
         />
 
-        <Modal isOpen={isInviteModalOpen} onClose={() => setIsInviteModalOpen(false)} title="Invite Collaborator">
+        <Modal
+          isOpen={isInviteModalOpen}
+          onClose={() => setIsInviteModalOpen(false)}
+          title="Invite Collaborator"
+        >
           <form onSubmit={handleInvite}>
             <input
               type="email"
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
-              placeholder="Enter collaborator email"
+              placeholder="Email address"
               required
-              className="w-full p-3 mb-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+              className="w-full p-3 border rounded-lg mb-4"
             />
-            <Button type="submit" className="w-full">Send Invite</Button>
+            <Button type="submit" className="w-full">
+              Send Invite
+            </Button>
           </form>
         </Modal>
       </div>
+
+      <div className="w-full flex justify-center">
+        <div className="max-w-6xl w-full px-6 md:px-8"></div>
+      </div>
     </AnimatedPage>
   );
-};
-
-export default BoardDetail;
+}

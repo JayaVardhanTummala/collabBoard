@@ -1,49 +1,99 @@
-import React from 'react';
-import Button from '../ui/Button';
-import TaskCard from './TaskCard';
-import { Plus } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import useAuthStore from '../../store/useAuthStore';
+import React from "react";
+import { Plus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import TaskCard from "./TaskCard";
+import useAuthStore from "../../store/useAuthStore";
 
-const KanbanColumn = ({ status, tasks, onTaskDrop, onNewTaskClick, onTaskClick, onTaskDelete }) => {
-  const statusTitle = status.replace('-', ' ');
+const BG_LIGHT = "bg-white";
+const BG_DARK = "bg-gray-800";
+
+export default function KanbanColumn({
+  status,
+  tasks,
+  onTaskDrop,
+  onNewTaskClick,
+  onTaskClick,
+  onTaskDelete,
+}) {
   const { isDarkMode } = useAuthStore();
-  const bgColor = isDarkMode ? 'bg-gray-800' : 'bg-gray-100';
 
   const handleDragOver = (e) => e.preventDefault();
-
   const handleDrop = (e) => {
     e.preventDefault();
-    const taskId = e.dataTransfer.getData('taskId');
+    const taskId = e.dataTransfer.getData("taskId");
     if (taskId) onTaskDrop(taskId, status);
   };
 
+  const canAddTask = status !== "Done";
+  const statusLabel = status.replace("-", " ");
+
   return (
-    <div
-      className={`flex flex-col w-full md:w-80 min-h-[300px] p-4 rounded-xl shadow-lg ${bgColor}`}
+    <motion.div
+      layout
       onDragOver={handleDragOver}
       onDrop={handleDrop}
+      className={`
+        w-[320px] min-w-[320px]
+        rounded-2xl p-5 flex flex-col
+        border-4 border-gray-900 
+        shadow-[8px_8px_0px_#1e293b]
+        ${BG_LIGHT}
+      `}
     >
-      <h3 className="text-xl font-bold mb-4 capitalize flex justify-between items-center">
-        {statusTitle}
-        <span className="text-sm px-2 py-0.5 rounded-full bg-indigo-500 text-white">{tasks.length}</span>
-      </h3>
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="font-black text-xl tracking-tight">
+          {statusLabel}
+        </h3>
 
-      <Button onClick={() => onNewTaskClick(status)} variant="secondary" className="w-full mb-4 text-sm">
-        <Plus size={16} /> Add Task
-      </Button>
+        <span
+          className="
+            text-xs font-extrabold px-2 py-1 rounded-full
+            bg-[var(--color-accent-blue)] text-gray-900
+            border-2 border-gray-900
+            shadow-[3px_3px_0px_#1e293b]
+          "
+        >
+          {tasks.length}
+        </span>
+      </div>
 
-      <motion.div layout className="flex flex-col space-y-3 overflow-y-auto">
+      {canAddTask && (
+        <button
+          onClick={() => onNewTaskClick(status)}
+          className="
+            mb-4 w-full flex items-center justify-center gap-2
+            px-3 py-2 border-2 border-gray-900 rounded-lg font-semibold
+            bg-[var(--color-accent-yellow)]
+            shadow-[4px_4px_0px_#1e293b]
+            transition-all
+            hover:-translate-y-[2px]
+            active:shadow-none
+          "
+        >
+          <Plus size={16} />
+          Add Task
+        </button>
+      )}
+
+      <div className="flex flex-col gap-3 overflow-y-auto pb-4">
         <AnimatePresence>
           {tasks.map((task) => (
-            <div key={task._id} draggable onDragStart={(e) => e.dataTransfer.setData('taskId', task._id)}>
-              <TaskCard task={task} onUpdate={onTaskClick} onDelete={onTaskDelete} />
-            </div>
+            <motion.div
+              key={task._id}
+              draggable
+              layout
+              onDragStart={(e) => e.dataTransfer.setData("taskId", task._id)}
+              whileHover={{ scale: 1.02 }}
+            >
+              <TaskCard
+                task={task}
+                onUpdate={onTaskClick}
+                onDelete={onTaskDelete}
+              />
+            </motion.div>
           ))}
         </AnimatePresence>
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
-};
-
-export default KanbanColumn;
+}

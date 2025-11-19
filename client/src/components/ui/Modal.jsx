@@ -7,8 +7,8 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   const { isDarkMode } = useAuthStore();
   if (!isOpen) return null;
 
-  const modalBg = isDarkMode ? 'bg-gray-900/70' : 'bg-black/50';
-  const contentBg = isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900';
+  const modalBg = "bg-black/40";  // universal backdrop
+  const contentBg = "bg-[var(--cb-card)] text-[var(--cb-text)] border border-[var(--cb-border)]";
 
   return (
     <AnimatePresence>
@@ -25,7 +25,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
             transition={{ type: "spring", duration: 0.3 }}
-            className={`max-w-md w-full p-6 rounded-xl shadow-2xl ${contentBg}`}
+            className={`
+              max-w-md w-full p-6 rounded-xl shadow-2xl 
+              ${contentBg}
+              transition-colors duration-300
+            `}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">

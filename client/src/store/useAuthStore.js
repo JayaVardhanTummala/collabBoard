@@ -9,7 +9,7 @@ const useAuthStore = create((set) => ({
 
   login: (userData, token) => {
     localStorage.setItem('token', token);
-    set({ user: userData, token: token, isAuthenticated: true });
+    set({ user: userData, token, isAuthenticated: true });
   },
 
   logout: () => {
@@ -17,6 +17,7 @@ const useAuthStore = create((set) => ({
     set({ user: null, token: null, isAuthenticated: false });
   },
 
+  // DARK MODE
   isDarkMode: localStorage.getItem('darkMode') === 'true',
   toggleDarkMode: () =>
     set((state) => {

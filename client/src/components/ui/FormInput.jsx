@@ -1,17 +1,23 @@
-import React from 'react';
-import useAuthStore from '../../store/useAuthStore';
+import React from "react";
 
-const FormInput = ({ id, label, type = 'text', value, onChange, placeholder, className = '' }) => {
-  const { isDarkMode } = useAuthStore();
-  const inputClasses = isDarkMode
-    ? 'bg-gray-700 border-gray-600 text-white focus:ring-indigo-500 focus:border-indigo-500'
-    : 'bg-white border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500';
-
+export default function FormInput({
+  id,
+  label,
+  type = "text",
+  value,
+  onChange,
+  placeholder,
+  className = "",
+}) {
   return (
-    <div className="mb-4">
-      <label htmlFor={id} className="block text-sm font-medium mb-1">
+    <div className="mb-6">
+      <label
+        htmlFor={id}
+        className="block mb-2 text-gray-800 font-semibold text-sm"
+      >
         {label}
       </label>
+
       <input
         id={id}
         type={type}
@@ -19,10 +25,14 @@ const FormInput = ({ id, label, type = 'text', value, onChange, placeholder, cla
         onChange={onChange}
         placeholder={placeholder}
         required
-        className={`w-full p-3 border rounded-lg shadow-sm ${inputClasses} ${className}`}
+        className={`
+          w-full p-3 text-gray-900 rounded-xl border-4 border-gray-900
+          bg-white shadow-[4px_4px_0px_#1e293b]
+          focus:outline-none focus:shadow-[6px_6px_0px_#1e293b] 
+          focus:-translate-y-[2px] transition-all 
+          ${className}
+        `}
       />
     </div>
   );
-};
-
-export default FormInput;
+}

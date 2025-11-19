@@ -9,6 +9,7 @@ const { errorHandler } = require('./src/middleware/errorMiddleware');
 const authRoutes = require('./src/routes/authRoutes');
 const boardRoutes = require('./src/routes/boardRoutes');
 const taskRoutes = require('./src/routes/taskRoutes');
+const inviteRoutes = require("./src/routes/inviteRoutes");
 
 // Load environment variables
 dotenv.config();
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/boards', boardRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use("/api/invites", inviteRoutes);
 
 // Global Error Handler
 app.use(errorHandler);

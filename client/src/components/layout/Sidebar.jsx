@@ -1,102 +1,129 @@
-import React from 'react';
-import { Home as HomeIcon, Settings, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import useBoardStore from '../../store/useBoardStore';
-import useAuthStore from '../../store/useAuthStore';
-import Button from '../ui/Button';
+import React, { useState } from "react";
+import { Home, Settings, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import useAuthStore from "../../store/useAuthStore";
+import useBoardStore from "../../store/useBoardStore";
+import { useNavigate, useLocation } from "react-router-dom";
+import UserAvatar from "./UserAvatar";
 
-const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
-  const { boards, currentBoard } = useBoardStore();
-  const { user, logout, isDarkMode } = useAuthStore();
+export default function Sidebar({ isOpen, setIsOpen }) {
+  const { user, logout } = useAuthStore();
+  const { boards } = useBoardStore();
+
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const bgColor = isDarkMode ? 'bg-gray-800' : 'bg-white';
-  const textColor = isDarkMode ? 'text-gray-300' : 'text-gray-600';
-  const activeClass = isDarkMode
-    ? 'bg-indigo-900/50 text-white shadow-inner'
-    : 'bg-indigo-100 text-indigo-700 shadow-inner';
-  const baseItemClass = `flex items-center p-3 rounded-lg transition-colors duration-150 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${textColor}`;
+  const [showLogout, setShowLogout] = useState(false);
+  const BOARD_COLORS = [
+    "bg-yellow-400",
+    "bg-blue-500",
+    "bg-indigo-600",
+    "bg-sky-400",
+  ];
 
-  const handleNavigation = (path) => {
-    navigate(path);
-    if (window.innerWidth < 768) toggleSidebar();
+  const navItem = (path, label, Icon) => {
+    const active = location.pathname === path;
+
+    return (
+      <div
+        onClick={() => navigate(path)}
+        className={`
+          flex items-center gap-4 px-5 py-4 rounded-xl cursor-pointer
+          text-base font-semibold transition-all 
+          ${active ? "bg-blue-100 text-blue-700 shadow-inner" : "hover:bg-gray-100"}
+        `}
+      >
+        <Icon size={20} />
+        {label}
+      </div>
+    );
   };
 
   return (
-    <div
-      className={`fixed inset-y-0 left-0 z-40 w-64 ${bgColor} border-r border-gray-200 dark:border-gray-700 transform ${
-        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } md:relative md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col`}
-    >
-      {/* Header */}
-      <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
-        <h1 className="text-2xl font-black text-indigo-600 dark:text-indigo-400">CollabBoard</h1>
-        <button onClick={toggleSidebar} className="p-1 md:hidden">
-          <X size={24} />
-        </button>
-      </div>
+    <>
+      <div
+        className="fixed left-0 top-0 w-[6px] h-full z-40 cursor-pointer"
+        onMouseEnter={() => setIsOpen(true)}
+      />
 
-      {/* Main Nav */}
-      <div className="flex-grow p-4 space-y-4 overflow-y-auto">
-        <nav className="space-y-1">
-          <div
-            onClick={() => handleNavigation('/dashboard')}
-            className={baseItemClass + (window.location.pathname === '/dashboard' ? activeClass : '')}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ x: "-110%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-110%" }}
+            transition={{ type: "spring", stiffness: 140, damping: 18 }}
+            className="
+              fixed left-0 top-0 h-full w-64 z-50 
+              bg-white/90 backdrop-blur-xl
+              shadow-[8px_8px_0px_#0B0F19]
+              rounded-r-3xl p-6 flex flex-col
+            "
+            onMouseLeave={() => setIsOpen(false)}
           >
-            <HomeIcon size={20} className="mr-3" />
-            Dashboard
-          </div>
-          <div
-            onClick={() => handleNavigation('/settings')}
-            className={baseItemClass + (window.location.pathname === '/settings' ? activeClass : '')}
-          >
-            <Settings size={20} className="mr-3" />
-            Settings
-          </div>
-        </nav>
+            <div className="text-2xl font-black mb-8">
+              <span className="text-black">Collab</span>
+              <span className="text-blue-600">Board</span>
+            </div>
 
-        {/* Boards Section */}
-        <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-          <h2 className="text-xs font-semibold uppercase tracking-wider mb-2">My Boards</h2>
-          <nav className="space-y-1">
-            <AnimatePresence>
-              {boards.length > 0 ? (
-                boards.map((board) => (
-                  <motion.div
-                    key={board._id}
-                    onClick={() => handleNavigation(`/board/${board._id}`)}
-                    className={
-                      baseItemClass +
-                      (currentBoard && currentBoard._id === board._id ? activeClass : '')
-                    }
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                    transition={{ duration: 0.2 }}
+            <div className="space-y-2">
+              {navItem("/dashboard", "Dashboard", Home)}
+              {navItem("/settings", "Settings", Settings)}
+            </div>
+
+            <div className="mt-8">
+              <p className="text-xs font-bold uppercase mb-2 text-gray-500">
+                My Boards
+              </p>
+
+              <div className="space-y-1">
+                {boards.map((b, idx) => (
+                  <div
+                    key={b._id}
+                    onClick={() => navigate(`/board/${b._id}`)}
+                    className="
+                      flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer
+                      hover:bg-gray-100 text-sm font-medium
+                    "
                   >
-                    <span className="w-2 h-2 mr-3 rounded-full bg-indigo-500"></span>
-                    <span className="truncate">{board.title}</span>
-                  </motion.div>
-                ))
-              ) : (
-                <p className="text-xs italic p-3">No boards yet.</p>
+                    <span
+                      className={`w-2.5 h-2.5 rounded-full ${BOARD_COLORS[idx % BOARD_COLORS.length]}`}
+                    />
+                    <p className="truncate">{b.title}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-auto pt-4 border-t">
+              <div
+                className="flex items-center gap-3 cursor-pointer"
+                onClick={() => setShowLogout(!showLogout)}
+              >
+                <UserAvatar name={user.name} />
+                <div className="flex flex-col">
+                  <span className="font-semibold text-sm">{user.name}</span>
+                  <span className="text-xs text-gray-500">{user.email}</span>
+                </div>
+                <ChevronDown size={16} />
+              </div>
+
+              {showLogout && (
+                <div
+                  onClick={logout}
+                  className="
+                    mt-3 px-4 py-2 rounded-lg text-center font-bold 
+                    bg-red-500 text-white cursor-pointer
+                    shadow-[4px_4px_0px_#0B0F19]
+                  "
+                >
+                  Logout
+                </div>
               )}
-            </AnimatePresence>
-          </nav>
-        </div>
-      </div>
-
-      {/* User Info & Logout */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        <p className="font-semibold truncate">{user?.name}</p>
-        <p className="text-sm opacity-70 truncate mb-2">{user?.email}</p>
-        <Button onClick={logout} variant="danger" className="w-full text-sm">
-          Logout
-        </Button>
-      </div>
-    </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
-};
-
-export default Sidebar;
+}

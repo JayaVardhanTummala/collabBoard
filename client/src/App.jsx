@@ -1,41 +1,42 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import useAuthStore from './store/useAuthStore';
-import AuthInitializer from './components/layout/AuthInitializer';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import MainLayout from './components/layout/MainLayout';
+// src/App.jsx
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import useAuthStore from "./store/useAuthStore";
+import AuthInitializer from "./components/layout/AuthInitializer";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import MainLayout from "./components/layout/MainLayout";
 
 // Pages
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import BoardDetail from './pages/BoardDetail';
-import SettingsPage from './pages/SettingsPage';
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import BoardDetail from "./pages/BoardDetail";
+import SettingsPage from "./pages/SettingsPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 
-const App = () => {
-  const { isDarkMode } = useAuthStore();
+export default function App() {
+  // IMPORTANT: subscribe to the boolean directly (not destructuring an object)
+  const isDarkMode = useAuthStore((s) => s.isDarkMode);
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
+    if (isDarkMode) {
+      console.log("isDarkMode ->", isDarkMode);
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   }, [isDarkMode]);
 
   return (
     <AuthInitializer>
       <Router>
-        <style>
-          {`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap'); 
-          body { font-family: 'Inter', sans-serif; }`}
-        </style>
-        <Toaster position="top-center" />
+        <Toaster position="top-right" />
         <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Protected Routes */}
           <Route
             path="/dashboard"
             element={
@@ -46,6 +47,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/board/:id"
             element={
@@ -56,6 +58,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/settings"
             element={
@@ -70,6 +73,4 @@ const App = () => {
       </Router>
     </AuthInitializer>
   );
-};
-
-export default App;
+}

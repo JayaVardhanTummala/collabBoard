@@ -1,17 +1,15 @@
-import React from 'react';
-import useAuthStore from '../../store/useAuthStore';
+import React from "react";
 
-const Card = ({ children, className = '' }) => {
-  const { isDarkMode } = useAuthStore();
-  const modeClasses = isDarkMode
-    ? 'bg-gray-800 text-white border border-gray-700'
-    : 'bg-white text-gray-900 border border-gray-200';
-
+export default function Card({ children, className = "" }) {
   return (
-    <div className={`p-6 rounded-xl shadow-lg ${modeClasses} ${className}`}>
+    <div
+      className={`
+        bg-white rounded-2xl p-8 border-4 border-gray-900
+        shadow-[10px_10px_0px_#1e293b]
+        ${className}
+      `}
+    >
       {children}
     </div>
   );
-};
-
-export default Card;
+}

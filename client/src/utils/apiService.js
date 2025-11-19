@@ -1,5 +1,5 @@
-import { toast } from 'react-hot-toast';
-import useAuthStore from '../store/useAuthStore';
+import { toast } from "react-hot-toast";
+import useAuthStore from "../store/useAuthStore";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -7,47 +7,98 @@ const fetchWithAuth = async (url, options = {}) => {
   const token = useAuthStore.getState().token;
 
   const headers = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     ...(options.headers || {}),
   };
 
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   const response = await fetch(url, { ...options, headers });
 
   if (response.status === 401) {
-    useAuthStore.getState().logout();
-    toast.error('Session expired. Please log in again.');
-    return null;
+    const token = useAuthStore.getState().token;
+
+    if (token) {
+      // token was present → real session expiry
+      useAuthStore.getState().logout();
+      toast.error("Session expired. Please log in again.");
+      return null;
+    }
+
+    // no token → normal 401 (e.g., invalid login)
+    const err = await response
+      .json()
+      .catch(() => ({ message: "Unauthorized" }));
+    throw new Error(err.message || "Unauthorized");
   }
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+    const errorData = await response
+      .json()
+      .catch(() => ({ message: "Unknown error" }));
     throw new Error(errorData.message || `HTTP ${response.status}`);
   }
 
-  if (options.method === 'DELETE') return { success: true };
+  if (options.method === "DELETE") return { success: true };
 
   return response.json();
 };
 
 const apiService = {
-  register: (data) => fetchWithAuth(`${BACKEND_URL}/auth/register`, { method: 'POST', body: JSON.stringify(data) }),
-  login: (data) => fetchWithAuth(`${BACKEND_URL}/auth/login`, { method: 'POST', body: JSON.stringify(data) }),
+  register: (data) =>
+    fetchWithAuth(`${BACKEND_URL}/auth/register`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  login: (data) =>
+    fetchWithAuth(`${BACKEND_URL}/auth/login`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
   getMe: () => fetchWithAuth(`${BACKEND_URL}/auth/me`),
+
+  // Invitations
+  getInvites: () => fetchWithAuth(`${BACKEND_URL}/invites`),
+
+  acceptInvite: (inviteId) =>
+    fetchWithAuth(`${BACKEND_URL}/invites/${inviteId}/accept`, {
+      method: "PUT",
+    }),
+
+  rejectInvite: (inviteId) =>
+    fetchWithAuth(`${BACKEND_URL}/invites/${inviteId}/reject`, {
+      method: "PUT",
+    }),
 
   getBoards: () => fetchWithAuth(`${BACKEND_URL}/boards`),
   getBoardDetail: (id) => fetchWithAuth(`${BACKEND_URL}/boards/${id}`),
-  createBoard: (title) => fetchWithAuth(`${BACKEND_URL}/boards`, { method: 'POST', body: JSON.stringify({ title }) }),
-  deleteBoard: (id) => fetchWithAuth(`${BACKEND_URL}/boards/${id}`, { method: 'DELETE' }),
+  createBoard: (title) =>
+    fetchWithAuth(`${BACKEND_URL}/boards`, {
+      method: "POST",
+      body: JSON.stringify({ title }),
+    }),
+  deleteBoard: (id) =>
+    fetchWithAuth(`${BACKEND_URL}/boards/${id}`, { method: "DELETE" }),
   inviteCollaborator: (boardId, email) =>
-    fetchWithAuth(`${BACKEND_URL}/boards/${boardId}/invite`, { method: 'PUT', body: JSON.stringify({ email }) }),
+    fetchWithAuth(`${BACKEND_URL}/boards/${boardId}/invite`, {
+      method: "PUT",
+      body: JSON.stringify({ email }),
+    }),
 
-  createTask: (data) => fetchWithAuth(`${BACKEND_URL}/tasks`, { method: 'POST', body: JSON.stringify(data) }),
-  updateTask: (taskId, data) => fetchWithAuth(`${BACKEND_URL}/tasks/${taskId}`, { method: 'PUT', body: JSON.stringify(data) }),
-  deleteTask: (taskId) => fetchWithAuth(`${BACKEND_URL}/tasks/${taskId}`, { method: 'DELETE' }),
+  createTask: (data) =>
+    fetchWithAuth(`${BACKEND_URL}/tasks`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateTask: (taskId, data) =>
+    fetchWithAuth(`${BACKEND_URL}/tasks/${taskId}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+  deleteTask: (taskId) =>
+    fetchWithAuth(`${BACKEND_URL}/tasks/${taskId}`, { method: "DELETE" }),
 };
 
 export default apiService;

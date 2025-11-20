@@ -21,7 +21,10 @@ const app = express();
 const httpServer = http.createServer(app); // 1. Create HTTP server from Express app
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true
+}));
 app.use(express.json());
 
 // Routes
@@ -37,7 +40,7 @@ app.use(errorHandler);
 // --- Socket.io Setup ---
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:5173", // CHANGE THIS TO YOUR FRONTEND URL (e.g., Vercel URL)
+        origin: process.env.CLIENT_URL, // CHANGE THIS TO YOUR FRONTEND URL (e.g., Vercel URL)
         methods: ["GET", "POST"]
     }
 });

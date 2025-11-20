@@ -1,69 +1,74 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-# CollabBoard
-
-CollabBoard is a modern, sleek, real-time Kanban app built for teams that want *speed*, *clarity*, and *zero friction*.  
-Create boards, manage tasks, collaborate instantly — all wrapped inside a beautifully crafted interface.
+# 🧩 CollabBoard  
+A clean, real-time, modern collaboration workspace built for teams that want speed, clarity and zero bullshit.  
+Think: Trello vibes × Premium UI × Instant Sync × Developer Precision.
 
 ---
 
 ## 🚀 Live Demo
-**URL:** _coming soon…_
+👉 **Use CollabBoard here:**  
+https://collab-board-k9k30dww2-jayavardhans-projects-3ef47ba9.vercel.app
 
 ---
 
-## ✨ Features
+## ✨ What We Built
 
-### 🗂️ Boards & Workflow
-- Create and manage unlimited boards  
-- Clean Kanban flow (To-Do → Doing → Done)  
-- Drag-and-drop tasks  
-- Color-coded task labels  
+### 🗂️ **Workspace Boards**
+- Create unlimited boards  
+- Clean tri-stage workflow: **To-Do → Doing → Done**  
+- Drag-and-drop powered Kanban  
+- Crisp shadows + micro-animations  
 
-### 🔥 Real-Time Collaboration
-- Instant updates via Socket.io  
-- Changes broadcast across all collaborators  
-- Optimistic UI for snappy interactions  
+### ⚡ **Real-Time Sync**
+- Powered by **Socket.io**  
+- Instantly sync tasks across all collaborators  
+- Optimistic UI → instant feedback  
 
-### 🎨 Premium UI + UX
-- Smooth motion with Framer Motion  
-- Crisp card shadows, micro-interactions  
-- Thoughtful spacing + typography  
-- Accessible, minimal, distraction-free visuals  
-
-### 👥 User Management
-- JWT Authentication  
-- Team invites  
+### 👥 **Collaboration**
+- Invite collaborators via email  
 - Board-level access  
+- Real-time updates for every member  
+
+### 🎨 **Premium UI / UX**
+- Smooth transitions (Framer Motion)  
+- Clean layout with strong typography  
+- Carefully tuned shadows, spacing, hierarchy  
+- Fast, lightweight, responsive  
+
+### 🔐 **Authentication**
+- JWT Auth  
+- Protected routes  
+- User persistence  
 
 ---
 
 ## 🧱 Tech Stack
 
-### Frontend
-- **React + Vite**  
-- **Zustand** (state mgmt)  
-- **Tailwind CSS**  
-- **Framer Motion**  
-- **React Hot Toast**  
+### **Frontend** (Deployed on Vercel)
+- **React + Vite**
+- **Zustand** for state management
+- **Tailwind CSS**
+- **Framer Motion**
+- **Lucide Icons**
+- **React Hot Toast**
 
-### Backend
-- **Node.js + Express.js**  
-- **MongoDB + Mongoose**  
-- **Socket.io**  
+### **Backend** (Deployed on Railway)
+- **Node.js + Express.js**
+- **MongoDB + Mongoose**
+- **Socket.io**
+- **JWT Authentication**
 
 ---
 
-## 📁 Folder Structure
+## 📌 Folder Structure
 
 ```
 client/
- ├── src/
- │   ├── components/
- │   ├── pages/
- │   ├── store/
- │   ├── utils/
- │   └── main.jsx
+ ├── components/
+ ├── pages/
+ ├── store/
+ ├── utils/
+ └── main.jsx
+
 server/
  ├── controllers/
  ├── models/
@@ -74,24 +79,24 @@ server/
 
 ---
 
-## 🔧 Environment Variables
+## 🌐 Environment Variables
 
-### **Client** (`/client/.env`)
+### **Client (`client/.env`)**
 ```
-VITE_API_URL=http://localhost:3000
-VITE_SOCKET_URL=http://localhost:3000
+VITE_API_URL=your_backend_url_here
+VITE_SOCKET_URL=your_socket_url_here
 ```
 
-### **Server** (`/server/.env`)
+### **Server (`server/.env`)**
 ```
-MONGO_URI=your_mongo_connection_string
-JWT_SECRET=your_secret
-CLIENT_URL=http://localhost:5173
+MONGO_URI=your_mongo_connection
+JWT_SECRET=choose_a_strong_secret
+CLIENT_URL=https://your-vercel-url.vercel.app
 ```
 
 ---
 
-## 🛠️ Run the Project Locally
+## 🛠️ Run Locally
 
 ### Frontend
 ```bash
@@ -109,221 +114,25 @@ npm run dev
 
 ---
 
-## 📌 API Endpoints
-
-### **Boards**
-```
-POST   /boards
-GET    /boards
-GET    /boards/:id
-DELETE /boards/:id
-```
-
-### **Tasks**
-```
-POST    /tasks
-PATCH   /tasks/:id
-DELETE  /tasks/:id
-```
-
-### **Invitations**
-```
-POST /boards/:id/invite
-```
-
----
-
-## 🧪 Screenshots
-> _Add after deployment_
-
+## 📸 Screenshots  
+(Add after deployment if needed)
 - Dashboard  
-- Board Detail  
+- Board Details  
 - Task Modal  
 - Invite System  
 
 ---
 
 ## 🤝 Contributing
-Contributions are welcome — but keep the code clean, consistent, and elegant.  
-Beauty matters here.
+PRs welcome — just keep the code **clean, readable, scalable**.
 
 ---
 
 ## 📄 License
-MIT License © 2025
+MIT © 2025
 
 ---
 
-## ❤️ Made with Love  
-Built with focus, clarity, and a little cinematic grit.  
+## ❤️ Made With Love  
+Crafted with discipline, clarity, and a little cinematic madness.  
 **Made with love by J.**
-
-=======
-# 🌉 **CollabBoard**
-A lightweight, modern, real-time Kanban collaboration tool where teams can create boards, add tasks, assign colors, drag-and-drop, and collaborate instantly.
-=======
-# CollabBoard
->>>>>>> 9a18905 (Updated README)
-
-CollabBoard is a modern, sleek, real-time Kanban app built for teams that want *speed*, *clarity*, and *zero friction*.  
-Create boards, manage tasks, collaborate instantly — all wrapped inside a beautifully crafted interface.
-
----
-
-## 🚀 Live Demo
-**URL:** _coming soon…_
-
----
-
-## ✨ Features
-
-### 🗂️ Boards & Workflow
-- Create and manage unlimited boards  
-- Clean Kanban flow (To-Do → Doing → Done)  
-- Drag-and-drop tasks  
-- Color-coded task labels  
-
-### 🔥 Real-Time Collaboration
-- Instant updates via Socket.io  
-- Changes broadcast across all collaborators  
-- Optimistic UI for snappy interactions  
-
-### 🎨 Premium UI + UX
-- Smooth motion with Framer Motion  
-- Crisp card shadows, micro-interactions  
-- Thoughtful spacing + typography  
-- Accessible, minimal, distraction-free visuals  
-
-### 👥 User Management
-- JWT Authentication  
-- Team invites  
-- Board-level access  
-
----
-
-## 🧱 Tech Stack
-
-### Frontend
-- **React + Vite**  
-- **Zustand** (state mgmt)  
-- **Tailwind CSS**  
-- **Framer Motion**  
-- **React Hot Toast**  
-
-### Backend
-- **Node.js + Express.js**  
-- **MongoDB + Mongoose**  
-- **Socket.io**  
-
----
-
-## 📁 Folder Structure
-
-```
-client/
- ├── src/
- │   ├── components/
- │   ├── pages/
- │   ├── store/
- │   ├── utils/
- │   └── main.jsx
-server/
- ├── controllers/
- ├── models/
- ├── routes/
- ├── sockets/
- └── index.js
-```
-
----
-
-## 🔧 Environment Variables
-
-### **Client** (`/client/.env`)
-```
-VITE_API_URL=http://localhost:3000
-VITE_SOCKET_URL=http://localhost:3000
-```
-
-### **Server** (`/server/.env`)
-```
-MONGO_URI=your_mongo_connection_string
-JWT_SECRET=your_secret
-CLIENT_URL=http://localhost:5173
-```
-
----
-
-## 🛠️ Run the Project Locally
-
-### Frontend
-```bash
-cd client
-npm install
-npm run dev
-```
-
-### Backend
-```bash
-cd server
-npm install
-npm run dev
-```
-
----
-
-## 📌 API Endpoints
-
-### **Boards**
-```
-POST   /boards
-GET    /boards
-GET    /boards/:id
-DELETE /boards/:id
-```
-
-### **Tasks**
-```
-POST    /tasks
-PATCH   /tasks/:id
-DELETE  /tasks/:id
-```
-
-### **Invitations**
-```
-POST /boards/:id/invite
-```
-
----
-
-## 🧪 Screenshots
-> _Add after deployment_
-
-- Dashboard  
-- Board Detail  
-- Task Modal  
-- Invite System  
-
----
-
-## 🤝 Contributing
-Contributions are welcome — but keep the code clean, consistent, and elegant.  
-Beauty matters here.
-
----
-
-## 📄 License
-MIT License © 2025
-
----
-
-## ❤️ Made with Love  
-Built with focus, clarity, and a little cinematic grit.  
-**Made with love by J.**
-
-<<<<<<< HEAD
-**CollabBoard → Where teams meet, work, and move.**  
-🚀🔥  
->>>>>>> d695611 (added readme file)
-=======
->>>>>>> 9a18905 (Updated README)

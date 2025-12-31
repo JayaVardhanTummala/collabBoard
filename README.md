@@ -6,7 +6,7 @@ Think: Trello vibes × Premium UI × Instant Sync × Developer Precision.
 
 ## 🚀 Live Demo
 👉 **Use CollabBoard here:**  
-https://collab-board-k9k30dww2-jayavardhans-projects-3ef47ba9.vercel.app
+[https://collab-board-k9k30dww2-jayavardhans-projects-3ef47ba9.vercel.app](https://collab-board-seven-beta.vercel.app/)
 
 ---
 
@@ -136,3 +136,4 @@ MIT © 2025
 ## ❤️ Made With Love  
 Crafted with discipline, clarity, and a little cinematic madness.  
 **Made with love by J.**
+
